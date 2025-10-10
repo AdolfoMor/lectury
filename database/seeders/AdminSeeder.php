@@ -14,6 +14,8 @@ class AdminSeeder extends Seeder
      */
     public function run()
         {
+            \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'admin']);
+            \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'member']);
             $email = env('ADMIN_EMAIL', 'admin@example.com');
 
             $admin = User::where('email', $email)->first();
@@ -28,7 +30,7 @@ class AdminSeeder extends Seeder
                 'password' => Hash::make(env('ADMIN_PASSWORD', 'change_me_123')),
                 'must_change_password' => true, 
             ]);
-            
+
             if (method_exists($admin, 'assignRole')) {
                 $admin->assignRole('admin');
             }

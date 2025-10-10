@@ -3,6 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\ChangePasswordController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -22,3 +23,12 @@ Route::middleware([
         return Inertia::render('Dashboard');
     })->name('dashboard');
 });
+
+Route::get('/password/change', function () {
+    return Inertia::render('Auth/ChangePassword', [
+        'warning' => session('warning'),
+    ]);
+})->name('password.change');
+
+Route::post('/password/change/update', [ChangePasswordController::class, 'update'])
+    ->name('password.change.update');

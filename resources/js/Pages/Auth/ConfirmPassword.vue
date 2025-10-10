@@ -22,7 +22,7 @@ const submit = () => {
             passwordInput.value.focus();
         },
     });
-};
+}; 
 </script>
 
 <template>
