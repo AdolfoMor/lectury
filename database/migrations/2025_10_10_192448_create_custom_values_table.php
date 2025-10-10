@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_user', function (Blueprint $table) {
+        Schema::create('custom_values', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('team_id');
-            $table->foreignId('user_id');
-            $table->string('role')->nullable();
+            $table->foreignId('field_id')->constrained('custom_fields')->onDelete('cascade');
+            $table->unsignedBigInteger('entity_id'); // Puede ser user, course o group
+            $table->text('value')->nullable();
             $table->timestamps();
-
-            $table->unique(['team_id', 'user_id']);
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_user');
+        Schema::dropIfExists('custom_values');
     }
 };
