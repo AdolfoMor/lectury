@@ -20,7 +20,13 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
+        $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            return Inertia::render('Admin/Dashboard');
+        }
+
+        return Inertia::render('User/Home');
     })->name('dashboard');
 });
 
