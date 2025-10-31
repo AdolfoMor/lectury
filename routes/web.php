@@ -14,27 +14,53 @@ Route::get('/', function () {
     ]);
 });
 
+// Rutas protegidas por autenticación
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
+
+    // Ruta principal según rol
     Route::get('/dashboard', function () {
-        $user = Auth::user();
+        $user = auth()->user();
 
         if ($user->hasRole('admin')) {
-            return Inertia::render('Admin/Dashboard');
+            return redirect()->route('admin.dashboard'); // Redirige al dashboard admin
         }
 
-        return Inertia::render('User/Home');
+        return Inertia::render('User/Home'); // Usuarios normales
     })->name('dashboard');
+
+    // Cambio de contraseña obligatorio
+    Route::get('/password/change', function () {
+        return Inertia::render('Auth/ChangePassword', [
+            'warning' => session('warning'),
+        ]);
+    })->name('password.change');
+
+    Route::post('/password/change/update', [ChangePasswordController::class, 'update'])
+        ->name('password.change.update');
+
+    // Rutas de administrador
+    Route::middleware('role:admin') // Solo usuarios con rol admin
+        ->prefix('admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::get('/dashboard', function () {
+                return Inertia::render('Admin/Dashboard');
+            })->name('dashboard');
+
+
+        });
+
+    // Rutas de usuario normal
+    Route::prefix('user')
+        ->name('user.')
+        ->group(function () {
+            Route::get('/home', function () {
+                return Inertia::render('User/Home');
+            })->name('home');
+
+        });
 });
-
-Route::get('/password/change', function () {
-    return Inertia::render('Auth/ChangePassword', [
-        'warning' => session('warning'),
-    ]);
-})->name('password.change');
-
-Route::post('/password/change/update', [ChangePasswordController::class, 'update'])
-    ->name('password.change.update');
