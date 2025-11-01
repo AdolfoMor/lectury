@@ -47,10 +47,9 @@ Route::middleware([
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
-            Route::get('/dashboard', function () {
-                return Inertia::render('Admin/Dashboard');
-            })->name('dashboard');
-
+            Route::get('/dashboard', fn() => Inertia::render('Admin/Dashboard'))->name('dashboard');
+            Route::get('/users', [UserController::class, 'index'])->name('users.index');
+            Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
 
         });
 
