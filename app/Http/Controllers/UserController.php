@@ -4,19 +4,26 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Auth\Access\HandlesAuthorization;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+
+    use AuthorizesRequests; 
+
     public function index()
     {
-        $this->authorize('viewAny', User::class);
+    $this->authorize('viewAny', User::class);
 
-        return inertia('Admin/Users/Index', [
-            'users' => User::all(['id', 'name', 'email']),
-        ]);
+    $users = User::with('roles')->paginate(10);
+
+    return inertia('Admin/Users', [
+        'users' => User::all(['id', 'name', 'email']),
+    ]);
     }
 
     /**
