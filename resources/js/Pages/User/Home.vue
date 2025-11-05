@@ -1,5 +1,5 @@
 <script setup>
-import AppLayout from '@/Layouts/AdminAppLayout.vue';
+import AppLayout from '@/Layouts/UserAppLayout.vue';
 </script>
 
 <template>

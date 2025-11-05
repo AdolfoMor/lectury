@@ -24,7 +24,7 @@ class ChangePasswordController extends Controller
             'password' => Hash::make($request->password),
             'must_change_password' => 0,
         ]);
-        Auth::login($user);
+        Auth::guard('web')->login($user);
         return redirect()->route('dashboard')->with('success', 'Contraseña actualizada correctamente.');
     }
 }

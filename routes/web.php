@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CourseController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -51,6 +52,7 @@ Route::middleware([
             Route::get('/dashboard', fn() => Inertia::render('Admin/Dashboard'))->name('dashboard');
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
             Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+            Route::resource('courses', CourseController::class)->except(['show']);
 
         });
 

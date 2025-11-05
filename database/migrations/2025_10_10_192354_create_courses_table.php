@@ -13,9 +13,16 @@ return new class extends Migration
     {
         Schema::create('courses', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('category_id')->nullable()->constrained('course_categories')->nullOnDelete();
+            $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->string('name');
             $table->text('description')->nullable();
-            $table->string('code')->unique()->nullable();
+            $table->enum('modality', ['Presencial', 'En línea', 'Mixta'])->default('En línea');
+            $table->enum('type', ['Gratuito', 'Pago'])->default('Gratuito');
+            $table->decimal('price', 8, 2)->nullable();
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
     }
