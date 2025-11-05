@@ -6,6 +6,7 @@ import  Input  from '@/Components/TextInput.vue'
 import  Button  from '@/Components/PrimaryButton.vue'
 // import { DataTable } from '@/Components/ui/data-table'
 import AppLayout from '@/Layouts/AdminAppLayout.vue';
+import NavLink from '@/Components/NavLink.vue';
 
 // Props que vienen desde Laravel
 defineProps({
@@ -22,8 +23,10 @@ defineProps({
   
   <div class="p-6 space-y-6">
     <div class="flex justify-between items-center">
-      <h1 class="text-2xl font-bold">Gestión de cursos</h1>
-      <Button>Agregar Curso</Button>
+      <h1 class="text-2xl font-bold">Gestión de Cursos</h1>
+      <NavLink :href="route('admin.courses.create')">
+        <Button>Nuevo curso</Button>
+      </NavLink>
     </div>
 
     <Card>
@@ -58,9 +61,13 @@ defineProps({
                 <td class="px-4 py-2">{{ course.start_date ?? '-' }}</td>
                 <td class="px-4 py-2">{{ course.end_date ?? '-' }}</td>
                 <td class="px-4 py-2 space-x-2">
-                  <Link :href="route('admin.courses.edit', course.id)">
+                  <NavLink :href="route('admin.courses.edit', course.id)">
                     <Button size="sm" variant="outline">Editar</Button>
-                  </Link>
+                  </NavLink>
+                  <NavLink :href="route('admin.courses.groups', course.id)">
+                    Ver grupos
+                  </NavLink>
+
                 </td>
 
               </tr>

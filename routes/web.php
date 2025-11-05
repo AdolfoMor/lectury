@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
+use App\Http\Controllers\GroupController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -53,6 +54,9 @@ Route::middleware([
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
             Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
             Route::resource('courses', CourseController::class)->except(['show']);
+            Route::resource('groups', GroupController::class)->except(['show']);
+            Route::get('/groups', [GroupController::class, 'index'])->name('groups.index'); // todos los grupos
+            Route::get('/courses/{course}/groups', [GroupController::class, 'byCourse'])->name('courses.groups'); // grupos por curso
 
         });
 

@@ -19,7 +19,7 @@ class UserController extends Controller
     {
     $this->authorize('viewAny', User::class);
 
-    $users = User::with('roles')->paginate(10);
+    $users = User::with('roles')->latest()->paginate(10);
 
     return inertia('Admin/Users', [
         'users' => User::all(['id', 'name', 'email']),

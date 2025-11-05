@@ -18,7 +18,7 @@ class CourseController extends Controller
             ->paginate(10);
 
         return inertia('Admin/Courses/Index', [
-            'courses' => Course::all(['id', 'modality', 'type', 'start_date', 'end_date']),
+            'courses' => Course::all(['id', 'name', 'modality', 'type', 'start_date', 'end_date']),
         ]);
     }
 
