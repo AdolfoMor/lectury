@@ -53,10 +53,19 @@ Route::middleware([
             Route::get('/dashboard', fn() => Inertia::render('Admin/Dashboard'))->name('dashboard');
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
             Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+            
             Route::resource('courses', CourseController::class)->except(['show']);
+            
             Route::resource('groups', GroupController::class)->except(['show']);
             Route::get('/groups', [GroupController::class, 'index'])->name('groups.index'); // todos los grupos
+            Route::get('/groups/create', [GroupController::class, 'create'])->name('groups.create');
+            Route::post('/groups', [GroupController::class, 'store'])->name('groups.store');
+            Route::get('/groups/{group}/edit', [GroupController::class, 'edit'])->name('groups.edit');
+            Route::put('/groups/{group}', [GroupController::class, 'update'])->name('groups.update');
+
+
             Route::get('/courses/{course}/groups', [GroupController::class, 'byCourse'])->name('courses.groups'); // grupos por curso
+            Route::get('/courses/{course}/groups/create', [GroupController::class, 'createFromCourse'])->name('courses.groups.create');
 
         });
 

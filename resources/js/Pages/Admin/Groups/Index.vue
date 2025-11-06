@@ -38,7 +38,7 @@ defineProps({
 
       <CardContent>
         <div class="overflow-x-auto">
-          <table class="min-w-full border border-gray-200 text-sm rounded-xl" v-if="groups && groups.data && groups.data.length">
+          <table class="min-w-full border border-gray-200 text-sm rounded-xl" v-if="groups && groups.length">
             <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
               <tr>
                 <th class="px-4 py-2 text-left">ID</th>
@@ -51,7 +51,7 @@ defineProps({
             </thead>
             <tbody>
                 
-            <tr v-for="group in groups.data" :key="group.id" class="border-t">
+            <tr v-for="group in groups" :key="group.id" class="border-t">
               <td class="px-4 py-2">{{ group.id }}</td>
               <td class="px-4 py-2">{{ group.name }}</td>
               <td class="px-4 py-2">{{ group.course?.name }}</td>

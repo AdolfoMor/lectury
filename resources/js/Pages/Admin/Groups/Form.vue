@@ -10,101 +10,73 @@ import AppLayout from '@/Layouts/AdminAppLayout.vue';
 import NavLink from '@/Components/NavLink.vue';
 
 const props = defineProps({
-  course: Object,
-  categories: Array,
+  group: Object,
+  courses: Array,
+  selectedCourse: Object,
 })
 
 
 const form = useForm({
-  name: props.course?.name ?? '',
-  description: props.course?.description ?? '',
-  category_id: props.course?.category_id ?? '',
-  modality: props.course?.modality ?? 'En línea',
-  type: props.course?.type ?? 'Gratuito',
-  price: props.course?.price ?? '',
-  start_date: props.course?.start_date ?? '',
-  end_date: props.course?.end_date ?? '',
+  course_id: props.selectedCourse?.id ?? props.group?.course_id ?? '',
+  name: props.group?.name ?? '',
+  start_date: props.group?.start_date ?? '',
+  end_date: props.group?.end_date ?? '',
 })
 
 function submit() {
-  if (props.course) {
-    form.put(route('admin.courses.update', props.course.id))
+  if (props.group) {
+    form.put(route('admin.groups.update', props.group.id))
   } else {
-    form.post(route('admin.courses.store'))
+    form.post(route('admin.groups.store'))
   }
 }
 </script>
 
 <template>
-<AppLayout :title="course ? 'Editar Curso' : 'Nuevo Curso'">
+<AppLayout :title="props.group ? 'Editar grupo' : 'Crear grupo'">
 
   <div class="p-6 space-y-6">
     <Card>
       <CardHeader>
-        <h2 class="text-xl font-semibold">{{ course ? 'Editar Curso' : 'Crear nuevo curso' }}</h2>
+        <h2 class="text-xl font-semibold">{{ props.group ? 'Editar grupo' : 'Crear nuevo grupo' }}</h2>
       </CardHeader>
 
       <CardContent>
-        <form @submit.prevent="submit" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium">Nombre</label>
-            <Input v-model="form.name" required />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium">Descripción</label>
-            <textarea v-model="form.description" class="w-full border rounded-md p-2" rows="3"></textarea>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium">Categoría</label>
-            <select v-model="form.category_id" class="border rounded-md p-2 w-full">
-              <option value="">-- Selecciona una categoría --</option>
-              <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
+        <form @submit.prevent="submit">
+          <div v-if="!props.selectedCourse">
+            <label class="block mb-1 text-sm font-medium">Curso</label>
+            <select v-model="form.course_id" class="w-full border rounded-lg p-2">
+              <option disabled value="">Selecciona un curso</option>
+              <option v-for="course in props.courses" :key="course.id" :value="course.id">
+                {{ course.name }}
+              </option>
             </select>
           </div>
-
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium">Modalidad</label>
-              <select v-model="form.modality" class="border rounded-md p-2 w-full">
-                <option>Presencial</option>
-                <option>En línea</option>
-                <option>Mixta</option>
-              </select>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium">Tipo</label>
-              <select v-model="form.type" class="border rounded-md p-2 w-full">
-                <option>Gratuito</option>
-                <option>Pago</option>
-              </select>
-            </div>
+          <div v-else>
+            <p class="text-sm text-gray-700">
+              <strong>Curso:</strong> {{ props.selectedCourse.name }}
+            </p>
           </div>
 
-          <div v-if="form.type === 'Pago'">
-            <label class="block text-sm font-medium">Precio</label>
-            <Input v-model="form.price" type="number" step="0.01" />
+          <div>
+            <label class="block mb-1 text-sm font-medium">Nombre del grupo</label>
+            <Input v-model="form.name" required placeholder="Ej. Grupo A - Febrero" />
           </div>
 
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium">Fecha de inicio</label>
-              <Input v-model="form.start_date" type="date" />
+          <div class="flex gap-4">
+            <div class="flex-1">
+              <label class="block mb-1 text-sm font-medium">Fecha inicio</label>
+              <Input type="date" v-model="form.start_date" />
             </div>
-            <div>
-              <label class="block text-sm font-medium">Fecha de fin</label>
-              <Input v-model="form.end_date" type="date" />
+            <div class="flex-1">
+              <label class="block mb-1 text-sm font-medium">Fecha fin</label>
+              <Input type="date" v-model="form.end_date" />
             </div>
           </div>
 
-          <div class="flex justify-end gap-2 pt-4">
-            <NavLink :href="route('admin.courses.index')">
-              <Button variant="outline">Cancelar</Button>
-            </NavLink>
-            <Button type="submit">Guardar</Button>
-          </div>
+          <Button type="submit" class="mt-4">
+            {{ props.group ? 'Actualizar grupo' : 'Crear grupo' }}
+          </Button>
         </form>
       </CardContent>
     </Card>

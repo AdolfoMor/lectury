@@ -24,9 +24,13 @@ defineProps({
   <div class="p-6 space-y-6">
     <div class="flex justify-between items-center">
       <h1 class="text-2xl font-bold">Grupos de {{ course.name }}</h1>
-      <NavLink href="route('admin.groups.create', { course_id: course.id })" class="btn btn-primary mb-4">
+        <NavLink 
+            :href="route('admin.courses.groups.create', course.id)" 
+            class="btn btn-primary mb-4"
+            >
             Nuevo grupo
-      </NavLink>
+        </NavLink>
+
     </div>
 
     <Card>
@@ -39,7 +43,7 @@ defineProps({
 
       <CardContent>
         <div class="overflow-x-auto">
-          <table class="min-w-full border border-gray-200 text-sm rounded-xl" v-if="groups && groups.data && groups.data.length">
+          <table class="min-w-full border border-gray-200 text-sm rounded-xl" v-if="groups && groups.length">
             <thead class="bg-gray-100 text-gray-600 uppercase text-xs">
               <tr>
                 <th class="px-4 py-2 text-left">ID</th>
@@ -52,10 +56,10 @@ defineProps({
             </thead>
             <tbody>
                 
-            <tr v-for="group in groups.data" :key="group.id" class="border-t">
+            <tr v-for="group in groups" :key="group.id" class="border-t">
               <td class="px-4 py-2">{{ group.id }}</td>
               <td class="px-4 py-2">{{ group.name }}</td>
-              <td class="px-4 py-2">{{ group.course?.name }}</td>
+              <td class="px-4 py-2">{{ course.name }}</td>
               <td class="px-4 py-2">{{ group.start_date }}</td>
               <td class="px-4 py-2">{{ group.end_date }}</td>
               <td class="px-4 py-2 space-x-2">
@@ -64,11 +68,11 @@ defineProps({
                 </NavLink>
               </td>
             </tr>
-              <tr v-if="groups.length === 0">
+            <tr v-if="!groups || groups.length === 0">
                 <td colspan="4" class="text-center py-4 text-gray-500">
-                  No hay Grupos registrados.
+                No hay Grupos registrados.
                 </td>
-              </tr>
+            </tr>
             </tbody>
           </table>
         </div>

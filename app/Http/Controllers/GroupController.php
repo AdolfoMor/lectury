@@ -14,7 +14,8 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Group::with('course:id,name')->get(['id', 'course_id', 'name', 'start_date', 'end_date']);
+        $groups = Group::with('course:id,name')
+            ->get(['id', 'course_id', 'name', 'start_date', 'end_date']);
 
         return Inertia::render('Admin/Groups/Index', [
             'groups' => $groups,
@@ -43,6 +44,17 @@ class GroupController extends Controller
         return Inertia::render('Admin/Groups/Form', [
             'courses' => $courses,
             'group' => null,
+            'selectedCourse' => null,
+        ]);
+    }
+
+
+    public function createFromCourse(Course $course)
+    {
+        return inertia('Admin/Groups/Form', [
+            'courses' => [],
+            'group' => null,
+            'selectedCourse' => $course,
         ]);
     }
 
@@ -51,7 +63,7 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
-            $validated = $request->validate([
+        $validated = $request->validate([
             'course_id' => 'required|exists:courses,id',
             'name' => 'required|string|max:255',
             'start_date' => 'nullable|date',
@@ -60,8 +72,14 @@ class GroupController extends Controller
 
         Group::create($validated);
 
-        return redirect()->route('admin.groups.index')->with('success','Grupo creado correctamente.');
-    }
+        if ($request->has('course_id')) {
+            return redirect()->route('admin.courses.groups', $request->course_id)
+                ->with('success', 'Grupo creado correctamente.');
+        }
+
+        return redirect()->route('admin.groups.index')
+            ->with('success', 'Grupo creado correctamente.');
+        }
 
     /**
      * Display the specified resource.
@@ -98,8 +116,14 @@ class GroupController extends Controller
 
         $group->update($validated);
 
-        return redirect()->route('admin.groups.index')->with('success', 'Grupo actualizado correctamente.');
-    }
+        if ($request->has('course_id')) {
+            return redirect()->route('admin.courses.groups', $group->course_id)
+                ->with('success', 'Grupo actualizado correctamente.');
+        }
+
+        return redirect()->route('admin.groups.index')
+            ->with('success', 'Grupo actualizado correctamente.');
+        }
 
     /**
      * Remove the specified resource from storage.
