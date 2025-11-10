@@ -7,6 +7,8 @@ use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\PermissionController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -52,8 +54,15 @@ Route::middleware([
         ->group(function () {
             Route::get('/dashboard', fn() => Inertia::render('Admin/Dashboard'))->name('dashboard');
             Route::get('/users', [UserController::class, 'index'])->name('users.index');
+
+            Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+            Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
             Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-            
+            Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+
+            Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+                
             Route::resource('courses', CourseController::class)->except(['show']);
             
             Route::resource('groups', GroupController::class)->except(['show']);
@@ -66,6 +75,12 @@ Route::middleware([
 
             Route::get('/courses/{course}/groups', [GroupController::class, 'byCourse'])->name('courses.groups'); // grupos por curso
             Route::get('/courses/{course}/groups/create', [GroupController::class, 'createFromCourse'])->name('courses.groups.create');
+
+            Route::resource('permissions', PermissionController::class);
+            Route::delete('permissions/{permission}', [PermissionController::class, 'destroy'])
+                ->name('permissions.destroy');
+
+            Route::resource('roles', RoleController::class);
 
         });
 

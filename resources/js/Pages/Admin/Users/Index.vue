@@ -6,6 +6,7 @@ import  Input  from '@/Components/TextInput.vue'
 import  Button  from '@/Components/PrimaryButton.vue'
 // import { DataTable } from '@/Components/ui/data-table'
 import AppLayout from '@/Layouts/AdminAppLayout.vue';
+import NavLink from '@/Components/NavLink.vue';
 
 // Props que vienen desde Laravel
 defineProps({
@@ -23,7 +24,7 @@ defineProps({
   <div class="p-6 space-y-6">
     <div class="flex justify-between items-center">
       <h1 class="text-2xl font-bold">Gestión de usuarios</h1>
-      <Button>Agregar usuario</Button>
+      <NavLink :href="route('admin.users.create')"><Button>Agregar usuario</Button></NavLink>
     </div>
 
     <Card>
@@ -52,7 +53,18 @@ defineProps({
                 <td class="px-4 py-2">{{ user.name }}</td>
                 <td class="px-4 py-2">{{ user.email }}</td>
                 <td class="px-4 py-2">
-                  <Button variant="outline" size="sm">Editar</Button>
+                  <NavLink :href="route('admin.users.edit', user.id)">
+                    <Button variant="outline" size="sm">Editar</Button>
+                  </NavLink>
+                  <NavLink
+                    as="button"
+                    method="delete"
+                    :href="route('admin.users.destroy', user.id)"
+                    class="danger"
+                    onclick="return confirm('¿Seguro que deseas eliminar este usuario?')"
+                  >
+                    Eliminar
+                  </NavLink>
                 </td>
               </tr>
               <tr v-if="users.length === 0">
